@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_video_play.*
 
 
@@ -18,10 +19,20 @@ class VideoPlayActivity : AppCompatActivity() {
             mVideo.setVideoURI(video)
             mVideo.requestFocus()
             mProgress.visibility = View.VISIBLE
-            mVideo.setOnPreparedListener {
-                mProgress.visibility = View.GONE
-                mVideo.start()
-            }
+        }
+
+        mVideo.setOnErrorListener { mp, what, extra ->
+            mProgress.visibility = View.GONE
+            mPlay.visibility = View.VISIBLE
+            Toast.makeText(this,
+                "Can't play this video. Check your Network/Server settings",
+                Toast.LENGTH_SHORT).show()
+            true
+        }
+
+        mVideo.setOnPreparedListener {
+            mProgress.visibility = View.GONE
+            mVideo.start()
         }
     }
 }
